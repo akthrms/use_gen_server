@@ -21,34 +21,42 @@ defmodule Deque do
     GenServer.call(__MODULE__, :pop_back)
   end
 
+  @impl GenServer
   def init(deque) when is_list(deque) do
     {:ok, deque}
   end
 
+  @impl GenServer
   def init(_deque) do
     {:error, "deque must be a list"}
   end
 
+  @impl GenServer
   def handle_cast({:push_front, element}, deque) do
     {:noreply, [element | deque]}
   end
 
+  @impl GenServer
   def handle_cast({:push_back, element}, deque) do
     {:noreply, deque ++ [element]}
   end
 
+  @impl GenServer
   def handle_call(:pop_front, _from, []) do
     {:reply, nil, []}
   end
 
+  @impl GenServer
   def handle_call(:pop_front, _from, [element | deque]) do
     {:reply, element, deque}
   end
 
+  @impl GenServer
   def handle_call(:pop_back, _from, []) do
     {:reply, nil, []}
   end
 
+  @impl GenServer
   def handle_call(:pop_back, _from, deque) do
     {element, new_deque} = List.pop_at(deque, -1)
     {:reply, element, new_deque}
